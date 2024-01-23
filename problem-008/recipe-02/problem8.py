@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import pdb
+from enum import Enum
 
 digits_str = (
             "73167176531330624919225119674426574742355349194934"
@@ -25,43 +25,36 @@ digits_str = (
             "71636269561882670428252483600823257530420752963450"
             )
 
+class Direction(Enum):
+    up = 0
+    down = 1
+
+
 class ProductMemo:
     def __init__(self, digits_str, n):
+        self.curr_direction = None
         self.digits_str = digits_str[0:n]
-        self.n_factors = n
-        self.product_memo = dict()
-        self._first_product()
-
-    def _first_product(self):
-        curr_digits_str = ""
-        curr_product = 1
-        n = self.n_factors
-        for i in range(n):
-            curr_product = curr_product * int(self.digits_str[n-1-i])
-            curr_digits_str = self.digits_str[n-1-i] + curr_digits_str
-            self.product_memo[curr_digits_str] = curr_product
-        self.max_product = curr_product
-        self.max_product_digits_str = curr_digits_str
+        self.local_maximum_list = [self.digits_str]
 
     def update_product(self, digit_char):
         assert len(digit_char) == 1
-        new_product_memo = dict()
-        new_product_memo[digit_char] = int(digit_char)
-        n = self.n_factors
-        for i in range(1, n):
-            sub_digits_str = self.digits_str[i:]
-            sub_product = self.product_memo[sub_digits_str]
-            curr_digits_str = sub_digits_str+digit_char
-            curr_product = sub_product*int(digit_char)
-            new_product_memo[curr_digits_str] = curr_product
-        self.digits_str = self.digits_str[1:]+digit_char
-        self.product_memo = new_product_memo
-        if self.product_memo[self.digits_str] > self.max_product:
-            self.max_product = self.product_memo[self.digits_str]
-            self.max_product_digits_str = self.digits_str
+        new_digits_str = self.digits_str[1:]+digit_char
+        if self.digits_str[0] <= digit_char:
+            self.curr_direction = Direction.up
+        else:   # self.digits_str[0] > digit_char
+            if self.curr_direction == Direction.up:
+                self.local_maximum_list.append(self.digits_str)
+            self.curr_direction = Direction.down
+        self.digits_str = new_digits_str
 
-    def get_result(self):
-        return self.max_product, self.max_product_digits_str
+    def get_local_maximum_list(self):
+        return self.local_maximum_list
+
+def product(digits_str):
+    res = 1
+    for digit_char in digits_str:
+        res = res * int(digit_char)
+    return res
 
 n_factors = 13
 product_memo = ProductMemo(digits_str, n_factors)
@@ -69,6 +62,18 @@ product_memo = ProductMemo(digits_str, n_factors)
 for i in range(n_factors, len(digits_str)):
     product_memo.update_product(digits_str[i])
 
-max_product, max_product_digits_str = product_memo.get_result()
+local_maximum_list = product_memo.get_local_maximum_list()
+
+print("len(local_maximum_list):", len(local_maximum_list))
+
+# last digits_str
+max_product_sub_str = digits_str[len(digits_str)-n_factors:]
+max_product = product(max_product_sub_str)
+for curr_product_sub_str in local_maximum_list:
+    curr_product = product(curr_product_sub_str)
+    if curr_product > max_product:
+        max_product = curr_product
+        max_product_sub_str = curr_product_sub_str
+
 print("max_product:", max_product)
-print("max_product_factor_list:", list(max_product_digits_str))
+print("max_product_sub_str:", max_product_sub_str)

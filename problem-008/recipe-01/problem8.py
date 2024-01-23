@@ -31,12 +31,12 @@ def product(digits_str, beg, n):
 
 n_factor = 13
 max_product = 0
-max_product_factor_list = []
+max_product_sub_str = ""
 for i in range(len(digits_str) - n_factor): 
     cur_product = product(digits_str, i, n_factor)
     if cur_product > max_product:
         max_product = cur_product
-        max_product_factor_list = list(digits_str[i:i+n_factor])
+        max_product_sub_str = digits_str[i:i+n_factor]
 
 print("max_product:", max_product)
-print("max_product_factor_list:", max_product_factor_list)
+print("max_product_sub_str:", max_product_sub_str)
