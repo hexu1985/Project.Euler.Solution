@@ -38,3 +38,55 @@ $$
 
 求前一百个自然数的平方的与和平方之差。
 
+---
+
+answer code:
+
+```python
+#!/usr/bin/env python3
+
+def square_then_sum(n):
+    res = 0
+    for i in range(n+1):
+        res = res + i*i
+    return res
+
+def sum_then_square(n):
+    res = sum(range(n+1))
+    return res*res
+
+n = 100
+ans = sum_then_square(n) - square_then_sum(n)
+print("ans:", ans)
+```
+
+---
+
+answer code:
+
+```python
+#!/usr/bin/env python3
+
+def square_then_sum(n):
+    return n*(n+1)*(2*n+1)//6
+
+def sum_then_square(n):
+    return (n*(n+1)//2)**2
+
+n = 100
+ans = sum_then_square(n) - square_then_sum(n)
+print("ans:", ans)
+```
+
+---
+
+answer code:
+
+```python
+#!/usr/bin/env python3
+
+n = 100
+ans = n*(n**2-1)*(3*n+2)//12
+print("ans:", ans)
+```
+
