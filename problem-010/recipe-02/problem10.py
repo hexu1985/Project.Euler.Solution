@@ -29,11 +29,7 @@ upper_limit = 2000000
 sum_of_primes = 0
 
 prime_list = generater_prime(upper_limit)
-for i in prime_list:
-    if i > upper_limit:
-        break
-    else:
-        sum_of_primes = sum_of_primes + i
+sum_of_primes = sum(prime_list)
 
 print("ans:", sum_of_primes)
 
